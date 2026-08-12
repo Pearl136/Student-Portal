@@ -94,7 +94,6 @@
     <div class="result-box" id="resultBox">
         <p style="font-size: 14px; color: #4a5568;">Your Calculated Aggregate Merit Score:</p>
         <h3 id="meritScore">0.00%</h3>
-        <p style="font-size:12px; color:#718096; margin-bottom: 10px;" id="testNote"></p>
         <a onclick="navigateTo('page2.html')" class="next-btn">Proceed to Eligible Universities &rarr;</a>
     </div>
 </div>
@@ -133,7 +132,6 @@
 
         if (s.merit) {
             document.getElementById('meritScore').innerText = parseFloat(s.merit).toFixed(2) + "%";
-            document.getElementById('testNote').innerText = "Calculated via " + s.testType + " test route (50% weighting).";
             document.getElementById('resultBox').style.display = 'block';
         }
     });
@@ -171,7 +169,6 @@
         });
 
         document.getElementById('meritScore').innerText = aggregate + "%";
-        document.getElementById('testNote').innerText = "Calculated via " + testType + " test route (50% weighting).";
         document.getElementById('resultBox').style.display = 'block';
     }
 </script>
