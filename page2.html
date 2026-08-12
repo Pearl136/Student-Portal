@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eligible Universities | Pakistan Student Career Portal</title>
+    <meta name="description" content="Browse 90+ universities across Pakistan matched to your merit aggregate, with approximate fees, cutoffs, and links to official admissions pages.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%93%3C/text%3E%3C/svg%3E">
+    <meta property="og:title" content="Eligible Universities | Pakistan Student Career Portal">
+    <meta property="og:description" content="Browse universities across Pakistan matched to your merit aggregate.">
+    <meta property="og:type" content="website">
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #f0f4f8; color: #2d3748; display: flex; flex-direction: column; min-height: 100vh; align-items: center; padding: 20px; }
+        .header-bar { width: 100%; max-width: 800px; text-align: center; margin-bottom: 20px; }
+        .header-bar h1 { color: #1a365d; font-size: 24px; font-weight: 700; }
+        .wizard-steps { display: flex; justify-content: space-between; width: 100%; max-width: 800px; margin-bottom: 25px; background: #e2e8f0; border-radius: 8px; padding: 6px; }
+        .step { flex: 1; text-align: center; padding: 10px; font-size: 13px; font-weight: 600; border-radius: 6px; color: #718096; text-decoration: none; cursor: pointer; transition: all 0.2s; }
+        .step:hover { background: #cbd5e0; color: #2d3748; }
+        .step.active { background: #2b6cb0; color: #ffffff; cursor: default; }
+        .summary-banner { background: #ffffff; border-radius: 10px; padding: 18px 24px; width: 100%; max-width: 800px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #3182ce; }
+        .summary-banner h3 { color: #2b6cb0; font-size: 18px; }
+        .summary-banner p { color: #718096; font-size: 13px; margin-top: 2px; }
+        .badge { background: #ebf8ff; color: #2b6cb0; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 16px; border: 1px solid #bee3f8; }
+        .disclaimer-banner { width: 100%; max-width: 800px; background: #fffaf0; border: 1px solid #fbd38d; color: #7b341e; font-size: 12.5px; padding: 10px 16px; border-radius: 8px; margin-bottom: 16px; line-height: 1.4; }
+        .official-link { display: inline-block; margin-top: 6px; font-size: 12px; color: #2b6cb0; text-decoration: none; font-weight: 600; }
+        .official-link:hover { text-decoration: underline; }
+        .controls { width: 100%; max-width: 800px; display: flex; gap: 15px; margin-bottom: 20px; }
+        .controls input, .controls select { padding: 10px 14px; border-radius: 8px; border: 1px solid #cbd5e0; outline: none; font-size: 14px; }
+        .controls input { flex: 2; }
+        .controls select { flex: 1; }
+        .uni-list { width: 100%; max-width: 800px; display: flex; flex-direction: column; gap: 16px; }
+        .uni-card { background: #ffffff; border-radius: 12px; padding: 22px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border: 1px solid #e2e8f0; }
+        .uni-info h4 { font-size: 18px; color: #1a365d; margin-bottom: 6px; }
+        .uni-info p { font-size: 13px; color: #4a5568; margin: 3px 0; }
+        .tag { display: inline-block; background: #e2e8f0; color: #4a5568; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-right: 6px; }
+        .tag.public { background: #feebc8; color: #744210; }
+        .tag.private { background: #e9d8fd; color: #44337a; }
+        .tag.eligible { background: #c6f6d5; color: #22543d; }
+        .uni-action { text-align: right; min-width: 170px; }
+        .cutoff-text { font-size: 12px; color: #718096; margin-bottom: 8px; }
+        .cutoff-val { font-weight: 700; color: #2d3748; font-size: 14px; }
+        .hostel-btn { display: inline-block; background: #3182ce; color: white; padding: 10px 16px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
+        .hostel-btn:hover { background: #2b6cb0; }
+        .back-link { display: inline-block; margin-top: 20px; color: #4a5568; text-decoration: none; font-size: 14px; font-weight: 600; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="header-bar">
+    <h1>Pakistan Student Career Portal</h1>
+</div>
+<div class="wizard-steps">
+    <a onclick="navigateTo('index.html')" class="step">1. Calculate Merit</a>
+    <div class="step active">2. Eligible Universities</div>
+    <a onclick="navigateTo('page3.html')" class="step">3. Hostel Guidance</a>
+</div>
+<div class="summary-banner">
+    <div>
+        <h3 id="fieldTitle">Field of Study</h3>
+        <p id="routeSubText">Showing universities matching your aggregate score</p>
+    </div>
+    <div class="badge" id="meritDisplay">0.00% Aggregate</div>
+</div>
+<div class="disclaimer-banner">
+    ⚠️ Cutoffs shown are a single approximate merit threshold per program, not split by test type — actual cutoffs vary by year and applicant pool. Fees marked with "~" are estimates; fees marked "(verified)" were checked against the university's official page. Always confirm both directly with the university before applying.
+</div>
+<div class="controls">
+    <input type="text" id="searchInput" placeholder="Search by University name or City..." onkeyup="filterUniversities()">
+    <select id="sectorFilter" onchange="filterUniversities()">
+        <option value="All">All Sectors</option>
+        <option value="Public">Public Sector</option>
+        <option value="Private">Private Sector</option>
+    </select>
+</div>
+<div class="uni-list" id="uniListContainer"></div>
+<a onclick="navigateTo('index.html')" class="back-link">&larr; Recalculate Merit</a>
+
+<script src="university-data.js"></script>
+<script>
+    const database = universityDatabase;
+
+    function getPortalState() {
+        const p = new URLSearchParams(window.location.search);
+        return {
+            merit: p.get('merit') || localStorage.getItem('portal_merit') || "75.00",
+            field: p.get('field') || localStorage.getItem('portal_field') || "Computer Science",
+            testType: p.get('testType') || localStorage.getItem('portal_testType') || "NTS",
+            uni: p.get('uni') || localStorage.getItem('portal_uni') || "COMSATS University Islamabad",
+            campus: p.get('campus') || localStorage.getItem('portal_campus') || "Islamabad Campus (Main)"
+        };
+    }
+
+    function savePortalState(data) {
+        Object.keys(data).forEach(k => localStorage.setItem('portal_' + k, data[k]));
+    }
+
+    function navigateTo(targetPage) {
+        const state = getPortalState();
+        window.location.href = `${targetPage}?merit=${encodeURIComponent(state.merit)}&field=${encodeURIComponent(state.field)}&testType=${encodeURIComponent(state.testType)}&uni=${encodeURIComponent(state.uni)}&campus=${encodeURIComponent(state.campus)}`;
+    }
+
+    const state = getPortalState();
+    savePortalState(state);
+
+    const userMerit = parseFloat(state.merit);
+    const userField = state.field;
+    const testType = state.testType;
+
+    document.getElementById('meritDisplay').innerText = userMerit.toFixed(2) + "% Aggregate";
+    document.getElementById('fieldTitle').innerText = "Target Field: " + userField;
+    document.getElementById('routeSubText').innerText = "Showing approximate merit cutoffs for your target field.";
+
+    function selectUniAndProceed(uniName, campusName) {
+        savePortalState({ merit: state.merit, field: state.field, testType: state.testType, uni: uniName, campus: campusName });
+        window.location.href = `page3.html?merit=${encodeURIComponent(state.merit)}&field=${encodeURIComponent(state.field)}&testType=${encodeURIComponent(state.testType)}&uni=${encodeURIComponent(uniName)}&campus=${encodeURIComponent(campusName)}`;
+    }
+
+    function filterUniversities() {
+        const searchVal = document.getElementById('searchInput').value.toLowerCase();
+        const sectorVal = document.getElementById('sectorFilter').value;
+
+        let filtered = database.filter(u => {
+            const matchField = u.field.toLowerCase().includes(userField.toLowerCase()) || userField.toLowerCase().includes(u.field.toLowerCase());
+            const matchSearch = u.name.toLowerCase().includes(searchVal) || u.campus.toLowerCase().includes(searchVal);
+            const matchSector = (sectorVal === "All") || (u.sector === sectorVal);
+            return matchField && matchSearch && matchSector;
+        });
+
+        if (filtered.length === 0 && searchVal === "" && sectorVal === "All") {
+            filtered = database;
+        }
+
+        const container = document.getElementById('uniListContainer');
+        container.innerHTML = "";
+        
+        filtered.forEach(uni => {
+            const cutoff = uni.cutoff;
+            const isEligible = userMerit >= cutoff;
+            const card = document.createElement('div');
+            card.className = "uni-card";
+            card.innerHTML = `
+                <div class="uni-info">
+                    <h4>${uni.name}</h4>
+                    <p><strong>Campus Branch:</strong> ${uni.campus}</p>
+                    <p><strong>Fee:</strong> ${uni.fee}</p>
+                    <div style="margin-top: 8px;">
+                        <span class="tag ${uni.sector.toLowerCase()}">${uni.sector}</span>
+                        <span class="tag">${uni.field}</span>
+                        ${isEligible ? '<span class="tag eligible">Eligible</span>' : ''}
+                    </div>
+                    ${uni.website ? `<a href="${uni.website}" target="_blank" rel="noopener" class="official-link">Official Website &#8599;</a>` : ''}
+                </div>
+                <div class="uni-action">
+                    <div class="cutoff-text">Approx. Merit Cutoff: <span class="cutoff-val">${cutoff}%</span></div>
+                    <button onclick="selectUniAndProceed('${uni.name}', '${uni.campus}')" class="hostel-btn">View Nearby Hostels &rarr;</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    filterUniversities();
+</script>
+</body>
+</html>

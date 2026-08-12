@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merit Calculator | Pakistan Student Career Portal</title>
+    <meta name="description" content="Calculate your university admission merit aggregate from Matric, Intermediate, and NTS/CBT entry test scores, then find eligible universities across Pakistan and nearby hostels.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%93%3C/text%3E%3C/svg%3E">
+    <meta property="og:title" content="Pakistan Student Career Portal">
+    <meta property="og:description" content="Calculate your merit aggregate, find eligible universities across Pakistan, and locate nearby hostels.">
+    <meta property="og:type" content="website">
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #f0f4f8; color: #2d3748; display: flex; flex-direction: column; min-height: 100vh; align-items: center; justify-content: center; padding: 20px; }
+        .header-bar { width: 100%; max-width: 600px; text-align: center; margin-bottom: 20px; }
+        .header-bar h1 { color: #1a365d; font-size: 24px; font-weight: 700; }
+        .header-bar p { color: #4a5568; font-size: 14px; margin-top: 4px; }
+        .wizard-steps { display: flex; justify-content: space-between; width: 100%; max-width: 600px; margin-bottom: 25px; background: #e2e8f0; border-radius: 8px; padding: 6px; }
+        .step { flex: 1; text-align: center; padding: 10px; font-size: 13px; font-weight: 600; border-radius: 6px; color: #718096; text-decoration: none; cursor: pointer; transition: all 0.2s; }
+        .step:hover { background: #cbd5e0; color: #2d3748; }
+        .step.active { background: #2b6cb0; color: #ffffff; cursor: default; }
+        .card { background: #ffffff; padding: 32px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08); width: 100%; max-width: 600px; border-top: 5px solid #2b6cb0; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #2d3748; }
+        input, select { width: 100%; padding: 11px 14px; border: 1.5px solid #cbd5e0; border-radius: 8px; font-size: 14px; outline: none; transition: all 0.2s; }
+        input:focus, select:focus { border-color: #3182ce; box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2); }
+        .row { display: flex; gap: 12px; }
+        .col { flex: 1; }
+        .btn { width: 100%; background-color: #2b6cb0; color: white; padding: 13px; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: background 0.2s; }
+        .btn:hover { background-color: #2c5282; }
+        .result-box { display: none; margin-top: 25px; padding: 20px; background-color: #ebf8ff; border: 1px solid #bee3f8; border-radius: 8px; text-align: center; }
+        .result-box h3 { color: #2b6cb0; font-size: 28px; margin: 8px 0; }
+        .next-btn { display: inline-block; margin-top: 15px; background-color: #38a169; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; }
+        .next-btn:hover { background-color: #2f855a; }
+    </style>
+</head>
+<body>
+<div class="header-bar">
+    <h1>Pakistan Student Career Portal</h1>
+    <p>Centralized University Eligibility & Residency Locator</p>
+</div>
+<div class="wizard-steps">
+    <div class="step active">1. Calculate Merit</div>
+    <a onclick="navigateTo('page2.html')" class="step">2. Eligible Universities</a>
+    <a onclick="navigateTo('page3.html')" class="step">3. Hostel Guidance</a>
+</div>
+<div class="card">
+    <form id="meritForm">
+        <div class="form-group">
+            <label for="fieldInput">Select or Type Desired Field of Study:</label>
+            <input list="fieldsList" id="fieldInput" placeholder="Click or type e.g., Computer Science" required>
+            <datalist id="fieldsList">
+                <option value="Computer Science">
+                <option value="Software Engineering">
+                <option value="Electrical Engineering">
+                <option value="Mechanical Engineering">
+                <option value="Civil Engineering">
+                <option value="MBBS / BDS">
+                <option value="Business Administration (BBA)">
+                <option value="Artificial Intelligence">
+            </datalist>
+        </div>
+        <div class="form-group">
+            <label>Matriculation / SSC / O-Levels Marks:</label>
+            <div class="row">
+                <div class="col"><input type="number" id="sscObtained" placeholder="Obtained" required min="0"></div>
+                <div class="col"><input type="number" id="sscTotal" placeholder="Total" value="1100" required min="1"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Intermediate / HSSC / A-Levels Marks:</label>
+            <div class="row">
+                <div class="col"><input type="number" id="hsscObtained" placeholder="Obtained" required min="0"></div>
+                <div class="col"><input type="number" id="hsscTotal" placeholder="Total" value="1100" required min="1"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Entry Test Type & Marks:</label>
+            <div class="row" style="margin-bottom: 8px;">
+                <div class="col">
+                    <select id="testType">
+                        <option value="NTS">NTS NAT (National Testing Service)</option>
+                        <option value="CBT">University CBT / NET / ECAT</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col"><input type="number" id="entryObtained" placeholder="Obtained Score" required min="0"></div>
+                <div class="col"><input type="number" id="entryTotal" placeholder="Total Marks" value="100" required min="1"></div>
+            </div>
+        </div>
+        <button type="button" class="btn" onclick="calculateMerit()">Calculate My Merit Aggregate</button>
+    </form>
+    <div class="result-box" id="resultBox">
+        <p style="font-size: 14px; color: #4a5568;">Your Calculated Aggregate Merit Score:</p>
+        <h3 id="meritScore">0.00%</h3>
+        <p style="font-size:12px; color:#718096; margin-bottom: 10px;" id="testNote"></p>
+        <a onclick="navigateTo('page2.html')" class="next-btn">Proceed to Eligible Universities &rarr;</a>
+    </div>
+</div>
+
+<script>
+    function getPortalState() {
+        const p = new URLSearchParams(window.location.search);
+        return {
+            merit: p.get('merit') || localStorage.getItem('portal_merit') || "75.00",
+            field: p.get('field') || localStorage.getItem('portal_field') || "Computer Science",
+            testType: p.get('testType') || localStorage.getItem('portal_testType') || "NTS",
+            uni: p.get('uni') || localStorage.getItem('portal_uni') || "COMSATS University Islamabad",
+            campus: p.get('campus') || localStorage.getItem('portal_campus') || "Islamabad Campus"
+        };
+    }
+
+    function savePortalState(data) {
+        Object.keys(data).forEach(k => localStorage.setItem('portal_' + k, data[k]));
+    }
+
+    function navigateTo(targetPage) {
+        const state = getPortalState();
+        window.location.href = `${targetPage}?merit=${encodeURIComponent(state.merit)}&field=${encodeURIComponent(state.field)}&testType=${encodeURIComponent(state.testType)}&uni=${encodeURIComponent(state.uni)}&campus=${encodeURIComponent(state.campus)}`;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const s = getPortalState();
+        document.getElementById('fieldInput').value = s.field;
+        document.getElementById('testType').value = s.testType;
+        if (localStorage.getItem('portal_sscObt')) document.getElementById('sscObtained').value = localStorage.getItem('portal_sscObt');
+        if (localStorage.getItem('portal_sscTot')) document.getElementById('sscTotal').value = localStorage.getItem('portal_sscTot');
+        if (localStorage.getItem('portal_hsscObt')) document.getElementById('hsscObtained').value = localStorage.getItem('portal_hsscObt');
+        if (localStorage.getItem('portal_hsscTot')) document.getElementById('hsscTotal').value = localStorage.getItem('portal_hsscTot');
+        if (localStorage.getItem('portal_entryObt')) document.getElementById('entryObtained').value = localStorage.getItem('portal_entryObt');
+        if (localStorage.getItem('portal_entryTot')) document.getElementById('entryTotal').value = localStorage.getItem('portal_entryTot');
+
+        if (s.merit) {
+            document.getElementById('meritScore').innerText = parseFloat(s.merit).toFixed(2) + "%";
+            document.getElementById('testNote').innerText = "Calculated via " + s.testType + " test route (50% weighting).";
+            document.getElementById('resultBox').style.display = 'block';
+        }
+    });
+
+    function calculateMerit() {
+        const sscObt = parseFloat(document.getElementById('sscObtained').value);
+        const sscTot = parseFloat(document.getElementById('sscTotal').value);
+        const hsscObt = parseFloat(document.getElementById('hsscObtained').value);
+        const hsscTot = parseFloat(document.getElementById('hsscTotal').value);
+        const entryObt = parseFloat(document.getElementById('entryObtained').value);
+        const entryTot = parseFloat(document.getElementById('entryTotal').value);
+        const field = document.getElementById('fieldInput').value;
+        const testType = document.getElementById('testType').value;
+
+        if (!sscObt || !sscTot || !hsscObt || !hsscTot || !entryObt || !entryTot || !field) {
+            alert("Please fill in all inputs.");
+            return;
+        }
+
+        const aggregate = (((sscObt / sscTot) * 10) + ((hsscObt / hsscTot) * 40) + ((entryObt / entryTot) * 50)).toFixed(2);
+
+        localStorage.setItem('portal_sscObt', sscObt);
+        localStorage.setItem('portal_sscTot', sscTot);
+        localStorage.setItem('portal_hsscObt', hsscObt);
+        localStorage.setItem('portal_hsscTot', hsscTot);
+        localStorage.setItem('portal_entryObt', entryObt);
+        localStorage.setItem('portal_entryTot', entryTot);
+
+        savePortalState({ 
+            merit: aggregate, 
+            field: field, 
+            testType: testType, 
+            uni: "COMSATS University Islamabad", 
+            campus: "Islamabad Campus" 
+        });
+
+        document.getElementById('meritScore').innerText = aggregate + "%";
+        document.getElementById('testNote').innerText = "Calculated via " + testType + " test route (50% weighting).";
+        document.getElementById('resultBox').style.display = 'block';
+    }
+</script>
+</body>
+</html>

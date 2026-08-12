@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Guidance | Pakistan Student Career Portal</title>
+    <meta name="description" content="Find verified boys' and girls' hostels near your chosen university campus in Pakistan, with rent ranges and facility details.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%93%3C/text%3E%3C/svg%3E">
+    <meta property="og:title" content="Hostel Guidance | Pakistan Student Career Portal">
+    <meta property="og:description" content="Find verified hostels near your chosen university campus in Pakistan.">
+    <meta property="og:type" content="website">
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #f0f4f8; color: #2d3748; display: flex; flex-direction: column; min-height: 100vh; align-items: center; padding: 20px; }
+        .header-bar { width: 100%; max-width: 800px; text-align: center; margin-bottom: 20px; }
+        .header-bar h1 { color: #1a365d; font-size: 24px; font-weight: 700; }
+        .wizard-steps { display: flex; justify-content: space-between; width: 100%; max-width: 800px; margin-bottom: 25px; background: #e2e8f0; border-radius: 8px; padding: 6px; }
+        .step { flex: 1; text-align: center; padding: 10px; font-size: 13px; font-weight: 600; border-radius: 6px; color: #718096; text-decoration: none; cursor: pointer; transition: all 0.2s; }
+        .step:hover { background: #cbd5e0; color: #2d3748; }
+        .step.active { background: #2b6cb0; color: #ffffff; cursor: default; }
+        .uni-banner { background: #ffffff; border-radius: 10px; padding: 20px 24px; width: 100%; max-width: 800px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-left: 5px solid #38a169; }
+        .uni-banner h2 { color: #1a365d; font-size: 20px; }
+        .uni-banner p { color: #718096; font-size: 14px; margin-top: 4px; }
+        .filter-tabs { width: 100%; max-width: 800px; display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { padding: 9px 18px; border-radius: 6px; border: 1px solid #cbd5e0; background: white; cursor: pointer; font-weight: 600; font-size: 13px; color: #4a5568; }
+        .tab-btn.active { background: #2b6cb0; color: white; border-color: #2b6cb0; }
+        .hostel-grid { width: 100%; max-width: 800px; display: grid; grid-template-columns: repeat(auto-fill, minmax(370px, 1fr)); gap: 18px; }
+        .hostel-card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; display: flex; flex-direction: column; justify-content: space-between; }
+        .hostel-card h3 { font-size: 17px; color: #2d3748; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .type-tag { font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 600; }
+        .type-boys { background: #ebf8ff; color: #2b6cb0; }
+        .type-girls { background: #fff5f5; color: #c53030; }
+        .rent-badge { font-size: 16px; font-weight: 700; color: #2f855a; margin-top: 10px; }
+        .facilities { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+        .fac-item { font-size: 11px; background: #edf2f7; padding: 4px 8px; border-radius: 4px; color: #4a5568; }
+        .contact-btn { display: block; text-align: center; background: #2b6cb0; color: white; padding: 9px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600; margin-top: 10px; }
+        .back-link { display: inline-block; margin-top: 25px; color: #4a5568; text-decoration: none; font-size: 14px; font-weight: 600; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="header-bar">
+    <h1>Pakistan Student Career Portal</h1>
+</div>
+<div class="wizard-steps">
+    <a onclick="navigateTo('index.html')" class="step">1. Calculate Merit</a>
+    <a onclick="navigateTo('page2.html')" class="step">2. Eligible Universities</a>
+    <div class="step active">3. Hostel Guidance</div>
+</div>
+<div class="uni-banner">
+    <h2 id="selectedUniName">University Accommodations</h2>
+    <p id="selectedCampus">Verified hostels and private residencies nearby</p>
+</div>
+<div class="filter-tabs">
+    <button class="tab-btn active" onclick="filterHostels('All', this)">All Residencies</button>
+    <button class="tab-btn" onclick="filterHostels('Boys', this)">Boys Hostels</button>
+    <button class="tab-btn" onclick="filterHostels('Girls', this)">Girls Hostels</button>
+</div>
+<div class="hostel-grid" id="hostelGrid"></div>
+<a onclick="navigateTo('page2.html')" class="back-link">&larr; Back to Universities List</a>
+
+<script>
+    function getPortalState() {
+        const p = new URLSearchParams(window.location.search);
+        return {
+            merit: p.get('merit') || localStorage.getItem('portal_merit') || "75.00",
+            field: p.get('field') || localStorage.getItem('portal_field') || "Computer Science",
+            testType: p.get('testType') || localStorage.getItem('portal_testType') || "NTS",
+            uni: p.get('uni') || localStorage.getItem('portal_uni') || "COMSATS University Islamabad",
+            campus: p.get('campus') || localStorage.getItem('portal_campus') || "Islamabad Campus (Main)"
+        };
+    }
+
+    function savePortalState(data) {
+        Object.keys(data).forEach(k => localStorage.setItem('portal_' + k, data[k]));
+    }
+
+    function navigateTo(targetPage) {
+        const state = getPortalState();
+        window.location.href = `${targetPage}?merit=${encodeURIComponent(state.merit)}&field=${encodeURIComponent(state.field)}&testType=${encodeURIComponent(state.testType)}&uni=${encodeURIComponent(state.uni)}&campus=${encodeURIComponent(state.campus)}`;
+    }
+
+    const state = getPortalState();
+    savePortalState(state);
+
+    document.getElementById('selectedUniName').innerText = state.uni;
+    document.getElementById('selectedCampus').innerText = "Campus Branch: " + state.campus;
+
+    const hostelsList = [
+        { name: "Al-Rehman Executive Boys Hostel", gender: "Boys", distance: "0.5 km from " + state.campus, rent: "PKR 14,000 - 18,000 / Month", facilities: ["24/7 Mess", "High-Speed WiFi", "UPS Backup", "Security"], contact: "+92 300 1234567" },
+        { name: "Al-Zahra Girls Residency", gender: "Girls", distance: "1.2 km from " + state.campus, rent: "PKR 16,000 - 22,000 / Month", facilities: ["3 Meals", "Furnished", "Secured Warden", "WiFi"], contact: "+92 312 9876543" },
+        { name: "Crown Student Lodges", gender: "Boys", distance: "0.8 km from " + state.campus, rent: "PKR 12,000 - 15,000 / Month", facilities: ["Mess Included", "Attached Bath", "Filter Water"], contact: "+92 333 5554433" },
+        { name: "Peace Haven Girls Hostel", gender: "Girls", distance: "0.3 km from " + state.campus, rent: "PKR 18,000 - 25,000 / Month", facilities: ["AC Rooms", "Gourmet Mess", "24/7 Security"], contact: "+92 301 7778899" }
+    ];
+
+    function renderHostels(list) {
+        const grid = document.getElementById('hostelGrid');
+        grid.innerHTML = "";
+        list.forEach(h => {
+            const card = document.createElement('div');
+            card.className = "hostel-card";
+            const tagClass = h.gender === "Boys" ? "type-boys" : "type-girls";
+            const facHtml = h.facilities.map(f => `<span class="fac-item">${f}</span>`).join('');
+            card.innerHTML = `
+                <div>
+                    <h3>${h.name} <span class="type-tag ${tagClass}">${h.gender}</span></h3>
+                    <p style="font-size:13px; color:#4a5568; margin-top:6px;"><strong>Distance:</strong> ${h.distance}</p>
+                    <div class="rent-badge">${h.rent}</div>
+                    <div class="facilities">${facHtml}</div>
+                </div>
+                <a href="tel:${h.contact}" class="contact-btn">Contact Warden (${h.contact})</a>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function filterHostels(type, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderHostels(type === 'All' ? hostelsList : hostelsList.filter(h => h.gender === type));
+    }
+
+    renderHostels(hostelsList);
+</script>
+</body>
+</html>
